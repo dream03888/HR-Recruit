@@ -1,0 +1,44 @@
+<nav class="pro-navbar">
+  <div class="nav-inner">
+
+    <!-- LEFT -->
+    <div class="nav-left">
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <span class="brand-name">Safari HR</span>
+      </div>
+
+      <ul class="nav-menu">
+        <li routerLink="/home" routerLinkActive="active">หน้าหลัก</li>
+        <li routerLink="/dashboard" routerLinkActive="active">แดชบอร์ด</li>
+        <li routerLink="/carlendar" routerLinkActive="active">ปฏิทินนัดสัมภาษณ์</li>
+
+
+        <li class="has-sub">
+          <span>ข้อมูลการลงทะเบียน</span>
+          <ul class="sub-menu">
+            <li routerLink="/hr-job">ยื่นคำร้องขอสมัครงาน</li>
+            <li routerLink="/drug/out">ผ่านการสมัครงาน</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="nav-right">
+      <button class="icon-btn">
+        <i class="fa-solid fa-bell"></i>
+        <span class="dot"></span>
+      </button>
+
+      <div class="user">
+        <div class="avatar">A</div>
+        <div class="user-info">
+          <span class="name">Admin</span>
+          <span class="role">Administrator</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>

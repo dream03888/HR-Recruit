@@ -1,0 +1,223 @@
+<h2 class="title">ระบบคัดเลือกผู้สมัครงาน</h2>
+
+<div class="d-flex gap-2 mb-3">
+  <button class="btn btn-success" (click)="exportExcel()">📤 Export</button>
+
+  <button class="btn btn-outline-success" (click)="fileInput.click()">📥 Import</button>
+
+  <input type="file" #fileInput hidden accept=".xlsx,.xls" (change)="Import($event)" />
+</div>
+
+
+
+<form [formGroup]="filterForm" class="filter-bar">
+  <input type="text" formControlName="keyword" placeholder="ค้นหา CID หรือ ชื่อ" />
+
+  <select formControlName="status">
+    <option value="">ทั้งหมด</option>
+    <option value="ผ่าน">ผ่าน</option>
+    <option value="ไม่ผ่าน">ไม่ผ่าน</option>
+    <option value="ยื่นสมัครงาน">ยื่นสมัครงาน</option>
+     <option value="รอสัมภาษณ์">รอสัมภาษณ์</option>
+  </select>
+
+  <button type="button" (click)="applyFilter()">ค้นหา</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>ลำดับ</th>
+      <th><input type="checkbox" (change)="toggleAll($event)" /></th>
+      <th>ชื่อ - นามสกุล</th>
+      <th>วันที่มาสมัคร</th>
+      <th>บัตรประชาชน</th>
+      <th>การเรียน</th>
+      <th>สถานะ</th>
+      <th>รายละเอียด</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let a of filteredApplicants; let i = index" [class.duplicate-row]="a.isDuplicate">
+      <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
+
+      <td>
+        <input type="checkbox" [(ngModel)]="a.selected" />
+      </td>
+
+      <td>{{ a.first_name }} {{ a.last_name }}</td>
+      <td>{{ a.apply_date | date }}</td>
+      <td>
+        {{ a.national_id }}
+        <span *ngIf="a.isDuplicate" class="badge bg-warning text-dark ms-2">
+          ซ้ำ
+        </span>
+      </td>
+
+      <td>{{ a.education_level }}</td>
+
+      <td>
+        <span [class.pass]="a.interview_status === 'ผ่าน'"
+          [class.fail]="a.interview_status === 'ไม่ผ่าน' || a.interview_status === 'ยกเลิก'"
+          [class.pending]="a.interview_status === 'ยื่นสมัครงาน'" [class.waiting]="a.interview_status === 'รอสัมภาษณ์'">
+          {{ a.interview_status }}
+        </span>
+      </td>
+
+      <td>
+        <button class="btn btn-outline-primary btn-sm" (click)="openDrawer(a)">
+          รายละเอียด
+        </button>
+
+      </td>
+      <td *ngIf="a.interview_status !== 'ยกเลิก'">
+        <button class="btn btn-outline-danger btn-sm" (click)="onUpdateStatus(a.id)">
+          ปฏิเสธ
+        </button>
+
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+<div class="pagination-bar">
+
+  <button class="page-btn" [disabled]="currentPage === 1" (click)="GetUserApplicants(currentPage - 1)">
+    ◀
+  </button>
+
+  <button *ngFor="let p of pages" class="page-btn" [class.active]="p === currentPage" (click)="GetUserApplicants(p)">
+    {{ p }}
+  </button>
+
+  <button class="page-btn" [disabled]="currentPage === totalPages" (click)="GetUserApplicants(currentPage + 1)">
+    ▶
+  </button>
+
+</div>
+
+<div class="action-bar">
+  <button type="button" class="btn-primary" (click)="updateStatus('ผ่าน')">✔ ผ่านที่เลือก</button>
+  <button type="button" class="btn-secondary" (click)="updateStatus('ไม่ผ่าน')">✖ ไม่ผ่านที่เลือก</button>
+</div>
+
+
+
+<!-- ================= Applicant Detail Dialog ================= -->
+
+
+<!-- Backdrop -->
+<div class="drawer-backdrop" *ngIf="showDrawer" (click)="closeDrawer()"></div>
+
+<!-- Drawer -->
+<div class="drawer-panel" [class.open]="showDrawer">
+
+  <!-- Header -->
+  <div class="drawer-header premium-header">
+    <div class="d-flex align-items-center gap-2">
+      <span class="header-icon">📄</span>
+      <h5 class="mb-0 fw-bold">ข้อมูลผู้สมัครงาน</h5>
+    </div>
+    <button class="btn-close btn-close-white" (click)="closeDrawer()"></button>
+  </div>
+
+  <!-- Body -->
+  <div class="drawer-body" *ngIf="selectedApplicant">
+
+    <!-- ข้อมูลการสมัคร -->
+    <div class="soft-card mb-4">
+      <h6 class="section-title">ข้อมูลการสมัคร</h6>
+      <div class="row g-3">
+        <div class="col-6">
+          <label>วันที่สมัคร</label>
+          <div>{{ selectedApplicant.apply_date | date }}</div>
+        </div>
+        <div class="col-6">
+          <label>ตำแหน่ง</label>
+          <div>{{ selectedApplicant.position_applied }}</div>
+        </div>
+        <div class="col-6">
+          <label>ฝ่าย</label>
+          <div>{{ selectedApplicant.department }}</div>
+        </div>
+        <div class="col-6">
+          <label>บริษัท</label>
+          <div>{{ selectedApplicant.company }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ข้อมูลผู้สมัคร -->
+    <div class="soft-card mb-4">
+      <h6 class="section-title">ข้อมูลผู้สมัคร</h6>
+      <div class="row g-3">
+        <div class="col-6">
+          <label>ชื่อ - นามสกุล</label>
+          <div>
+            {{ selectedApplicant.title }}
+            {{ selectedApplicant.first_name }}
+            {{ selectedApplicant.last_name }}
+          </div>
+        </div>
+        <div class="col-6">
+          <label>CID</label>
+          <div>{{ selectedApplicant.national_id }}</div>
+        </div>
+        <div class="col-6">
+          <label>โทร</label>
+          <div>{{ selectedApplicant.phone }}</div>
+        </div>
+        <div class="col-6">
+          <label>สถานะ</label>
+          <span class="badge rounded-pill" [class.bg-success]="selectedApplicant.interview_status==='ผ่าน'"
+            [class.bg-danger]="selectedApplicant.interview_status==='ไม่ผ่าน'"
+            [class.bg-warning]="selectedApplicant.interview_status==='รอสัมภาษณ์'"
+            [class.bg-warning]="selectedApplicant.interview_status==='ยื่นสมัครงาน'"
+            [class.bg-secondary]="selectedApplicant.interview_status==='ยกเลิก'">
+
+
+
+            {{ selectedApplicant.interview_status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ข้อมูลเพิ่มเติม -->
+    <div class="soft-card">
+      <h6 class="section-title">ข้อมูลเพิ่มเติม</h6>
+      <div class="row g-3">
+        <div class="col-6">
+          <label>เงินเดือนที่ต้องการ</label>
+          <div>{{ selectedApplicant.expected_salary | number }} บาท</div>
+        </div>
+        <div class="col-6">
+          <label>วุฒิการศึกษา</label>
+          <div>{{ selectedApplicant.education_level }}</div>
+        </div>
+        <div class="col-6">
+          <label>อายุ</label>
+          <div>{{ selectedApplicant.age }} ปี</div>
+        </div>
+        <div class="col-6">
+          <label>ภาษา</label>
+          <div>{{ selectedApplicant.language_skills }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- Footer -->
+  <!-- Footer -->
+  <div class="drawer-footer" *ngIf="selectedApplicant.interview_status !== 'ยกเลิก'">
+    <button class="btn btn-primary" (click)="openInterviewModal()">
+      📅 นัดสัมภาษณ์
+    </button>
+  </div>
+
+
+</div>
+<app-interview-modal *ngIf="showInterviewModal" [applicant]="selectedApplicant" (save)="saveInterview($event)"
+  (close)="showInterviewModal=false">
+</app-interview-modal>

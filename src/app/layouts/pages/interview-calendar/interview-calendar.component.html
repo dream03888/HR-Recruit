@@ -1,0 +1,53 @@
+<!-- มีข้อมูล -->
+<ng-container *ngIf="itemsData && itemsData.length > 0; else noInterview">
+  <div class="agenda-day" *ngFor="let day of itemsData">
+
+    <h4 class="agenda-date">
+      {{ day.interview_date | date:'fullDate' }}
+    </h4>
+
+    <div class="agenda-item">
+
+      <div class="agenda-time" *ngIf="day.interview_time; else noTime">
+        {{ day.interview_time }}
+      </div>
+
+      <ng-template #noTime>
+        <div class="agenda-time text-muted">
+          ยังไม่ระบุเวลา
+        </div>
+      </ng-template>
+
+      <div class="agenda-info">
+        <div class="agenda-name">
+          {{ day.first_name }} {{ day.last_name }}
+        </div>
+        <div class="agenda-meta">
+          {{ day.position_applied }} • {{ day.department }}
+        </div>
+      </div>
+
+      <button
+        class="btn btn-outline-primary btn-sm"
+        (click)="openDetail(day)">
+        รายละเอียด
+      </button>
+
+    </div>
+  </div>
+</ng-container>
+
+<!-- ไม่มีข้อมูล -->
+<ng-template #noInterview>
+  <div class="text-center text-muted py-5">
+    📭 ไม่มีนัดสัมภาษณ์
+  </div>
+</ng-template>
+
+
+<app-interview-detail-modal
+  *ngIf="showDetailModal"
+  [interview]="selectedInterview"
+  (close)="showDetailModal=false"
+  (updateStatus)="onUpdateStatus($event)">
+</app-interview-detail-modal>

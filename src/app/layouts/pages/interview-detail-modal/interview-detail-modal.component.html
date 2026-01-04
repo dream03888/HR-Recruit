@@ -1,0 +1,40 @@
+<div class="modal-backdrop" (click)="close.emit()"></div>
+
+<div class="modal-panel">
+
+  <!-- Header -->
+  <div class="modal-header">
+    <h5>📄 รายละเอียดผู้สมัคร</h5>
+    <button class="btn-close" (click)="close.emit()"></button>
+  </div>
+
+  <!-- Body -->
+  <div class="modal-body" *ngIf="interview">
+
+    <div class="section">
+      <h6>ข้อมูลการสมัคร</h6>
+      <div><label>วันที่:</label> {{ interview.interview_date | date }}</div>
+      <div><label>เวลา:</label> {{ interview.interview_time || 'ยังไม่ระบุ' }}</div>
+      <div><label>สถานที่:</label> {{ interview.location }}</div>
+    </div>
+
+    <div class="section">
+      <h6>ข้อมูลผู้สมัคร</h6>
+      <div><label>ชื่อ:</label> {{ interview.first_name }} {{ interview.last_name }}</div>
+      <div><label>CID:</label> {{ interview.national_id }}</div>
+      <div><label>โทร:</label> {{ interview.phone }}</div>
+      <div><label>ตำแหน่ง:</label> {{ interview.position_applied }}</div>
+      <div><label>ฝ่าย:</label> {{ interview.department }}</div>
+     <div><label>เงินเดือนที่ต้องการ:</label> {{ interview.expected_salary }}</div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <button class="btn btn-success" (click)="pass()">✔ ผ่าน</button>
+    <button class="btn btn-danger" (click)="fail()">✖ ไม่ผ่าน</button>
+  </div>
+
+</div>

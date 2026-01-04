@@ -1,0 +1,14 @@
+<h2>⚙️ COM Port Setting</h2>
+
+<select [(ngModel)]="port">
+  <option *ngFor="let p of ports" [value]="p.path">
+    {{ p.path }} - {{ p.manufacturer }}
+  </option>
+</select>
+
+<input type="number" [(ngModel)]="baudRate">
+
+<button (click)="connect()">Connect</button>
+<button (click)="test()">Test Send</button>
+
+<p>{{ status }}</p>

@@ -1,0 +1,78 @@
+.agenda-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 24px;
+}
+
+/* Toolbar */
+.calendar-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.calendar-toolbar .btn {
+  border: 1px solid #e5e7eb;
+  background: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.range-label {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Day */
+.agenda-day {
+  margin-bottom: 32px;
+}
+
+.agenda-date {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+/* Item */
+.agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f9fafb;
+  margin-bottom: 8px;
+}
+
+.agenda-time {
+  width: 70px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.agenda-info {
+  flex: 1;
+}
+
+.agenda-name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.agenda-meta {
+  font-size: 13px;
+  color: #6b7280;
+}
+.date-picker {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  color: #374151;
+}

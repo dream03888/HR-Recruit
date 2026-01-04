@@ -1,0 +1,730 @@
+<!-- ===== STEPPER ===== -->
+<div class="stepper mb-4 no-print">
+  <div
+    class="step"
+    *ngFor="let s of [1,2,3,4]"
+    [class.active]="step === s"
+    [class.done]="step > s"
+  >
+    <div class="circle">{{ s }}</div>
+    <div class="label">
+      {{
+        s === 1 ? 'ข้อมูลส่วนตัว' :
+        s === 2 ? 'ครอบครัว' :
+        s === 3 ? 'การศึกษา' :
+        'ตรวจสอบ'
+      }}
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOOLBAR (Bootstrap เท่านั้น) ===== -->
+<div class="container-fluid mb-3 no-print">
+  <button type="button" class="btn btn-primary me-2" (click)="mode='edit'">โหมดแก้ไข</button>
+  <button type="button" class="btn btn-secondary me-2" (click)="print()">พิมพ์ / Print</button>
+  <label class="btn btn-outline-dark">
+    อัปโหลดรูป
+    <input type="file" hidden accept="image/*" (change)="uploadPhoto($event)">
+  </label>
+</div>
+
+<form [formGroup]="form" class="doc modern" [class.print]="mode==='print'">
+
+  <!-- =========================
+       STEP 1 (ของเดิมคุณทั้งหมด)
+       ========================= -->
+<ng-container *ngIf="step === 1">
+
+<section class="paper-form">
+
+  <!-- ===== HEADER ===== -->
+  <table class="paper-header">
+    <tr>
+      <td style="width:120px">
+        <img src="/assets/logo.png" style="width:190px">
+
+      </td>
+      <td class="text-center">
+        <div class="paper-company">
+          บริษัท ซาฟารีเวิลด์ จำกัด (มหาชน)<br>
+          <small>Safari World Public Company Limited</small>
+        </div>
+        <div class="paper-title-main">
+          ใบสมัครงาน<br>
+          <small>Application for Employment</small>
+        </div>
+      </td>
+      <td style="width:140px " >
+        <div class="photo-box paper-photo text-end">
+          <ng-container *ngIf="form.value.photo; else ph">
+            <img [src]="form.value.photo" class="photo">
+          </ng-container>
+          <ng-template #ph>รูปถ่าย<br>Photo</ng-template>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ===== NOTE ===== -->
+  <div class="paper-note">
+    โปรดกรอกข้อมูลให้ครบถ้วนด้วยลายมือ และแนบเอกสารประกอบการสมัครงาน<br>
+    <small>Please fill this form neatly in ink and attach relevant documents</small>
+  </div>
+
+  <!-- ===== POSITION ===== -->
+  <table class="paper-table mt">
+    <tr>
+      <td>
+        ตำแหน่งที่สมัคร 1<br>
+        <small>Position applied</small>
+        <input formControlName="position1">
+      </td>
+      <td>
+        2
+        <input formControlName="position2">
+      </td>
+      <td>
+        3
+        <input formControlName="position3">
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        โทรศัพท์มือถือ<br>
+        <small>Mobile phone</small>
+        <input formControlName="mobile">
+      </td>
+      <td>
+        วันที่พร้อมเริ่มงาน<br>
+        <small>Starting date</small>
+        <input formControlName="startDate">
+      </td>
+      <td>
+        เงินเดือนที่คาดหวัง<br>
+        <small>Expected salary</small>
+        <input formControlName="salary">
+      </td>
+    </tr>
+  </table>
+
+  <!-- ===== PERSONAL DATA ===== -->
+  <div class="paper-section-title">
+    ประวัติส่วนบุคคล<br>
+    <small>Personal Data</small>
+  </div>
+
+  <table class="paper-table">
+    <tr>
+      <td colspan="2">
+        ชื่อ - สกุล<br>
+        <small>Name - Surname</small>
+        <input formControlName="firstName">
+        <input class="mt" formControlName="lastName">
+      </td>
+      <td>
+        ชื่อเล่น<br>
+        <small>Nickname</small>
+        <input formControlName="nickname">
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        เพศ<br>
+        <small>Sex</small><br>
+        <label><input type="radio" value="male" formControlName="sex"> ชาย</label>
+        <label><input type="radio" value="female" formControlName="sex"> หญิง</label>
+      </td>
+      <td>
+        วัน/เดือน/ปีเกิด<br>
+        <small>Date of birth</small>
+        <input formControlName="birthDate">
+      </td>
+      <td>
+        อายุ<br>
+        <small>Age</small>
+        <input formControlName="age">
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        ส่วนสูง (ซม.)<br>
+        <small>Height</small>
+        <input formControlName="height">
+      </td>
+      <td>
+        น้ำหนัก (กก.)<br>
+        <small>Weight</small>
+        <input formControlName="weight">
+      </td>
+      <td>
+        เชื้อชาติ / สัญชาติ<br>
+        <small>Race / Nationality</small>
+        <input formControlName="race">
+        <input class="mt" formControlName="nationality">
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        เลขประจำตัวประชาชน<br>
+        <small>ID Card No.</small>
+        <input formControlName="idCard">
+      </td>
+    </tr>
+  </table>
+
+  <!-- ===== ADDRESS ===== -->
+  <table class="paper-table mt">
+    <tr>
+      <td>
+        ที่อยู่ปัจจุบัน<br>
+        <small>Present address</small>
+        <textarea rows="3" formControlName="address"></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Email / Social Media<br>
+        <input formControlName="email">
+        <input class="mt" formControlName="social">
+      </td>
+    </tr>
+  </table>
+
+  <!-- ===== MILITARY ===== -->
+  <table class="paper-table mt">
+    <tr>
+      <td>
+        สถานภาพทางทหาร<br>
+        <small>Military status</small><br>
+
+        <label><input type="radio" value="discharged" formControlName="militaryStatus"> เกณฑ์แล้ว</label>
+        <label><input type="radio" value="notYet" formControlName="militaryStatus"> ยังไม่ได้เกณฑ์</label>
+        <label><input type="radio" value="exempted" formControlName="militaryStatus"> ได้รับการยกเว้น</label>
+      </td>
+    </tr>
+  </table>
+
+</section>
+
+</ng-container>
+
+
+
+  <!-- =========================
+       STEP 2 (paper form)
+       ========================= -->
+  <ng-container *ngIf="step === 2">
+    <div class="step-page">
+
+      <section class="paper-form">
+
+        <!-- ================= FAMILY DATA ================= -->
+        <div class="paper-title">
+          ประวัติครอบครัว<br>
+          <small>Family Data</small>
+        </div>
+
+        <table class="paper-table">
+          <tr>
+            <td colspan="4">
+              สถานภาพทางครอบครัว<br>
+              <small>Marital status</small>
+              <div class="inline-radio">
+                <label><input type="radio" value="single" formControlName="maritalStatus"> โสด</label>
+                <label><input type="radio" value="married" formControlName="maritalStatus"> สมรส</label>
+                <label><input type="radio" value="separated" formControlName="maritalStatus"> แยกกันอยู่</label>
+                <label><input type="radio" value="divorced" formControlName="maritalStatus"> หย่าร้าง</label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              จำนวนพี่น้อง (รวมตัวเอง)<br>
+              <small>Number of siblings</small>
+              <input formControlName="siblings">
+            </td>
+            <td>
+              เป็นบุตรคนที่<br>
+              <small>You are the child</small>
+              <input formControlName="childOrder">
+            </td>
+            <td colspan="2">
+              จำนวนบุตร<br>
+              <small>Number of children</small>
+              <input formControlName="childrenCount">
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              บุคคลติดต่อฉุกเฉิน<br>
+              <small>Emergency contact</small>
+              <input formControlName="emergencyName">
+            </td>
+            <td>
+              ความสัมพันธ์<br>
+              <small>Relationship</small>
+              <input formControlName="emergencyRelation">
+            </td>
+            <td colspan="2">
+              เบอร์โทรศัพท์<br>
+              <small>Telephone number</small>
+              <input formControlName="emergencyPhone">
+            </td>
+          </tr>
+        </table>
+
+        <!-- ================= FAMILY MEMBERS ================= -->
+       <table class="paper-table mt">
+  <tr class="head">
+    <th>ชื่อ - สกุล<br><small>Name - Surname</small></th>
+    <th>อายุ<br><small>Age</small></th>
+    <th>อาชีพ<br><small>Occupation</small></th>
+    <th>สถานที่ทำงาน<br><small>Place of Work</small></th>
+    <th>เบอร์โทรศัพท์<br><small>Mobile phone</small></th>
+  </tr>
+
+  <tr>
+    <td>บิดา<br><input class="paper-input" formControlName="fatherName"></td>
+    <td><input class="paper-input" formControlName="fatherAge"></td>
+    <td><input class="paper-input" formControlName="fatherJob"></td>
+    <td><input class="paper-input" formControlName="fatherWork"></td>
+    <td><input class="paper-input" formControlName="fatherPhone"></td>
+  </tr>
+
+  <tr>
+    <td>มารดา<br><input class="paper-input" formControlName="motherName"></td>
+    <td><input class="paper-input" formControlName="motherAge"></td>
+    <td><input class="paper-input" formControlName="motherJob"></td>
+    <td><input class="paper-input" formControlName="motherWork"></td>
+    <td><input class="paper-input" formControlName="motherPhone"></td>
+  </tr>
+
+  <tr>
+    <td>คู่สมรส<br><input class="paper-input" formControlName="spouseName"></td>
+    <td><input class="paper-input" formControlName="spouseAge"></td>
+    <td><input class="paper-input" formControlName="spouseJob"></td>
+    <td><input class="paper-input" formControlName="spouseWork"></td>
+    <td><input class="paper-input" formControlName="spousePhone"></td>
+  </tr>
+</table>
+
+
+        <!-- ================= EDUCATION ================= -->
+        <div class="paper-title mt">
+          ประวัติการศึกษา<br>
+          <small>Education</small>
+        </div>
+
+       <table class="paper-table">
+  <tr class="head">
+    <th>ระดับการศึกษา<br><small>Education Level</small></th>
+    <th>สถานศึกษา<br><small>School / Institution</small></th>
+    <th>สาขาวิชา<br><small>Major</small></th>
+    <th>เกรดเฉลี่ย<br><small>GPA</small></th>
+    <th>เริ่ม<br><small>From</small></th>
+    <th>ถึง<br><small>To</small></th>
+  </tr>
+
+  <tr>
+    <td>ประถมศึกษา</td>
+    <td><input class="paper-input" formControlName="eduPrimarySchool"></td>
+    <td><input class="paper-input" formControlName="eduPrimaryMajor"></td>
+    <td><input class="paper-input" formControlName="eduPrimaryGpa"></td>
+    <td><input class="paper-input" formControlName="eduPrimaryFrom"></td>
+    <td><input class="paper-input" formControlName="eduPrimaryTo"></td>
+  </tr>
+
+  <tr>
+    <td>มัธยมศึกษาตอนต้น</td>
+    <td><input class="paper-input" formControlName="eduSecondarySchool"></td>
+    <td><input class="paper-input" formControlName="eduSecondaryMajor"></td>
+    <td><input class="paper-input" formControlName="eduSecondaryGpa"></td>
+    <td><input class="paper-input" formControlName="eduSecondaryFrom"></td>
+    <td><input class="paper-input" formControlName="eduSecondaryTo"></td>
+  </tr>
+
+  <tr>
+    <td>มัธยมศึกษาตอนปลาย</td>
+    <td><input class="paper-input" formControlName="eduHighSchool"></td>
+    <td><input class="paper-input" formControlName="eduHighMajor"></td>
+    <td><input class="paper-input" formControlName="eduHighGpa"></td>
+    <td><input class="paper-input" formControlName="eduHighFrom"></td>
+    <td><input class="paper-input" formControlName="eduHighTo"></td>
+  </tr>
+
+  <tr>
+    <td>ปวช.</td>
+    <td><input class="paper-input" formControlName="eduVocSchool"></td>
+    <td><input class="paper-input" formControlName="eduVocMajor"></td>
+    <td><input class="paper-input" formControlName="eduVocGpa"></td>
+    <td><input class="paper-input" formControlName="eduVocFrom"></td>
+    <td><input class="paper-input" formControlName="eduVocTo"></td>
+  </tr>
+
+  <tr>
+    <td>ปวส.</td>
+    <td><input class="paper-input" formControlName="eduDipSchool"></td>
+    <td><input class="paper-input" formControlName="eduDipMajor"></td>
+    <td><input class="paper-input" formControlName="eduDipGpa"></td>
+    <td><input class="paper-input" formControlName="eduDipFrom"></td>
+    <td><input class="paper-input" formControlName="eduDipTo"></td>
+  </tr>
+
+  <tr>
+    <td>ปริญญาตรี</td>
+    <td><input class="paper-input" formControlName="eduBachelorSchool"></td>
+    <td><input class="paper-input" formControlName="eduBachelorMajor"></td>
+    <td><input class="paper-input" formControlName="eduBachelorGpa"></td>
+    <td><input class="paper-input" formControlName="eduBachelorFrom"></td>
+    <td><input class="paper-input" formControlName="eduBachelorTo"></td>
+  </tr>
+
+  <tr>
+    <td>ปริญญาโท</td>
+    <td><input class="paper-input" formControlName="eduMasterSchool"></td>
+    <td><input class="paper-input" formControlName="eduMasterMajor"></td>
+    <td><input class="paper-input" formControlName="eduMasterGpa"></td>
+    <td><input class="paper-input" formControlName="eduMasterFrom"></td>
+    <td><input class="paper-input" formControlName="eduMasterTo"></td>
+  </tr>
+
+  <tr>
+    <td>อื่นๆ</td>
+    <td><input class="paper-input" formControlName="eduOtherSchool"></td>
+    <td><input class="paper-input" formControlName="eduOtherMajor"></td>
+    <td><input class="paper-input" formControlName="eduOtherGpa"></td>
+    <td><input class="paper-input" formControlName="eduOtherFrom"></td>
+    <td><input class="paper-input" formControlName="eduOtherTo"></td>
+  </tr>
+</table>
+
+
+      </section>
+
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="step === 3">
+
+<section class="paper-form">
+
+  <!-- ================= TRAINING ================= -->
+  <div class="paper-title">
+    การอบรม / สัมมนา<br>
+    <small>Training Course / Seminar</small>
+  </div>
+
+  <table class="paper-table" formArrayName="trainings">
+    <tr class="head">
+      <th>ปี<br><small>Year</small></th>
+      <th>สถาบัน<br><small>Organization</small></th>
+      <th>หลักสูตร<br><small>Certificate</small></th>
+      <th>ระยะเวลา<br><small>Duration</small></th>
+    </tr>
+
+    <tr *ngFor="let t of trainingsFA.controls; let i = index"
+        [formGroupName]="i">
+      <td><input class="paper-input" formControlName="year"></td>
+      <td><input class="paper-input" formControlName="organization"></td>
+      <td><input class="paper-input" formControlName="course"></td>
+      <td><input class="paper-input" formControlName="duration"></td>
+    </tr>
+  </table>
+
+  <!-- ================= WORK EXPERIENCE ================= -->
+  <div class="paper-title mt">
+    ประวัติการทำงาน (เรียงจากอดีตถึงปัจจุบัน)<br>
+    <small>Working Experience (From Past to Present)</small>
+  </div>
+
+  <table class="paper-table" formArrayName="workExperiences">
+    <tr class="head">
+      <th>บริษัท<br><small>Company</small></th>
+      <th>ตำแหน่ง<br><small>Position</small></th>
+      <th colspan="2">ระยะเวลา<br><small>Duration</small></th>
+      <th>ลักษณะงาน<br><small>Job Description</small></th>
+      <th>เงินเดือนสุดท้าย<br><small>Last Salary</small></th>
+      <th>สาเหตุที่ออก<br><small>Reason for Leaving</small></th>
+    </tr>
+
+    <tr class="sub-head">
+      <th></th>
+      <th></th>
+      <th>จาก</th>
+      <th>ถึง</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+
+    <tr *ngFor="let t of trainingsFA.controls; let i = index"
+        [formGroupName]="i">
+      <td><input class="paper-input" formControlName="company"></td>
+      <td><input class="paper-input" formControlName="position"></td>
+      <td><input class="paper-input" formControlName="from"></td>
+      <td><input class="paper-input" formControlName="to"></td>
+      <td><textarea class="paper-input" formControlName="description"></textarea></td>
+      <td><input class="paper-input" formControlName="lastSalary"></td>
+      <td><input class="paper-input" formControlName="reason"></td>
+    </tr>
+  </table>
+
+  <!-- ================= LANGUAGE & SKILLS ================= -->
+  <div class="paper-title mt">
+    ภาษา และทักษะอื่นๆ<br>
+    <small>Language Ability and Other Skills</small>
+  </div>
+
+  <table class="paper-table" formGroupName="languages">
+    <tr class="head">
+      <th>ภาษา</th>
+      <th>พูด</th>
+      <th>อ่าน</th>
+      <th>เขียน</th>
+    </tr>
+
+    <tr formGroupName="thai">
+      <td>ไทย</td>
+      <td><input class="paper-input" formControlName="speak"></td>
+      <td><input class="paper-input" formControlName="read"></td>
+      <td><input class="paper-input" formControlName="write"></td>
+    </tr>
+
+    <tr formGroupName="english">
+      <td>อังกฤษ</td>
+      <td><input class="paper-input" formControlName="speak"></td>
+      <td><input class="paper-input" formControlName="read"></td>
+      <td><input class="paper-input" formControlName="write"></td>
+    </tr>
+
+    <tr formGroupName="chinese">
+      <td>จีน</td>
+      <td><input class="paper-input" formControlName="speak"></td>
+      <td><input class="paper-input" formControlName="read"></td>
+      <td><input class="paper-input" formControlName="write"></td>
+    </tr>
+  </table>
+
+  <!-- ================= COMPUTER SKILLS ================= -->
+  <table class="paper-table mt" formGroupName="computerSkills">
+    <tr class="head">
+      <th>โปรแกรม</th>
+      <th>ดีมาก</th>
+      <th>พอใช้</th>
+      <th>แย่</th>
+    </tr>
+
+    <tr>
+      <td>Word</td>
+      <td><input type="radio" value="good" formControlName="word"></td>
+      <td><input type="radio" value="fair" formControlName="word"></td>
+      <td><input type="radio" value="poor" formControlName="word"></td>
+    </tr>
+
+    <tr>
+      <td>Excel</td>
+      <td><input type="radio" value="good" formControlName="excel"></td>
+      <td><input type="radio" value="fair" formControlName="excel"></td>
+      <td><input type="radio" value="poor" formControlName="excel"></td>
+    </tr>
+
+    <tr>
+      <td>PowerPoint</td>
+      <td><input type="radio" value="good" formControlName="powerpoint"></td>
+      <td><input type="radio" value="fair" formControlName="powerpoint"></td>
+      <td><input type="radio" value="poor" formControlName="powerpoint"></td>
+    </tr>
+  </table>
+
+  <!-- ================= OTHER SKILLS ================= -->
+  <div class="paper-title mt">
+    ความสามารถพิเศษ / งานอดิเรก / กีฬา<br>
+    <small>Skills / Special Interests / Hobbies / Sport</small>
+  </div>
+
+  <textarea rows="3" class="paper-input" formControlName="otherSkills"></textarea>
+
+</section>
+
+
+</ng-container>
+
+<ng-container *ngIf="step === 4">
+
+<section class="paper-form">
+
+  <div class="paper-title">
+    ข้อมูลเพิ่มเติม<br>
+    <small>Additional Information</small>
+  </div>
+
+  <table class="paper-table">
+
+    <!-- 1 -->
+    <tr>
+      <td colspan="4">
+        1. ท่านเดินทางมาปฏิบัติงานโดย<br>
+        <small>Travel to work by</small><br>
+
+        <label><input type="checkbox" formControlName="travel_car"> รถยนต์ส่วนบุคคล</label>
+        <label><input type="checkbox" formControlName="travel_motorcycle"> รถจักรยานยนต์</label>
+        <label><input type="checkbox" formControlName="travel_bus"> รถประจำทาง</label>
+        <label><input type="checkbox" formControlName="travel_other"> อื่นๆ</label>
+      </td>
+    </tr>
+
+    <!-- 2 -->
+    <tr>
+      <td colspan="4">
+        2. ท่านทราบข่าวการรับสมัครงานจาก<br>
+        <small>How did you know about this vacant position</small><br>
+
+        <label><input type="checkbox" formControlName="source_ad"> ป้ายรับสมัครงาน</label>
+        <label><input type="checkbox" formControlName="source_friend"> เพื่อนแนะนำ</label>
+        <label><input type="checkbox" formControlName="source_direct"> ติดต่อสอบถามบริษัท</label>
+        <label><input type="checkbox" formControlName="source_other"> อื่นๆ</label>
+      </td>
+    </tr>
+
+    <!-- 3 -->
+    <tr>
+      <td colspan="4">
+        3. ท่านรู้จักพนักงานในบริษัทที่ท่านสมัครหรือไม่<br>
+        <small>Do you know any employee in this company</small><br>
+
+        <label><input type="radio" value="yes" formControlName="know_employee"> มี</label>
+        <label><input type="radio" value="no" formControlName="know_employee"> ไม่มี</label>
+
+        <div class="grid-3 mt">
+          <input placeholder="ชื่อ - สกุล" formControlName="known_emp_name">
+          <input placeholder="ฝ่าย" formControlName="known_emp_department">
+          <input placeholder="ความสัมพันธ์" formControlName="known_emp_relation">
+        </div>
+      </td>
+    </tr>
+
+    <!-- 4 -->
+    <tr>
+      <td colspan="4">
+        4. ท่านเคยสมัครงานหรือเคยเป็นพนักงานของบริษัทนี้หรือไม่<br>
+        <small>Have you ever applied or worked in this company</small><br>
+
+        <label><input type="radio" value="yes" formControlName="worked_before"> มี</label>
+        <label><input type="radio" value="no" formControlName="worked_before"> ไม่มี</label>
+
+        <div class="grid-3 mt">
+          <input placeholder="ตำแหน่ง" formControlName="prev_position">
+          <input placeholder="ฝ่าย" formControlName="prev_department">
+          <input placeholder="ปี" formControlName="prev_year">
+        </div>
+      </td>
+    </tr>
+
+    <!-- 5 -->
+    <tr>
+      <td colspan="4">
+        5. ท่านเคยถูกเลิกจ้างหรือให้ออกจากงานหรือไม่<br>
+        <small>Have you ever been dismissed from work</small><br>
+
+        <label><input type="radio" value="yes" formControlName="dismissed"> เคย</label>
+        <label><input type="radio" value="no" formControlName="dismissed"> ไม่เคย</label>
+      </td>
+    </tr>
+
+    <!-- 6 -->
+    <tr>
+      <td colspan="4">
+        6. ท่านมีโรคประจำตัวหรือไม่<br>
+        <small>Do you have any chronic disease</small><br>
+
+        <label><input type="radio" value="yes" formControlName="chronic_disease"> มี</label>
+        <label><input type="radio" value="no" formControlName="chronic_disease"> ไม่มี</label>
+
+        <input class="mt" placeholder="ระบุ" formControlName="chronic_detail">
+      </td>
+    </tr>
+
+    <!-- 7 -->
+    <tr>
+      <td colspan="4">
+        7. ท่านเคยต้องโทษทางอาญาหรือไม่<br>
+        <small>Have you ever been convicted</small><br>
+
+        <label><input type="radio" value="yes" formControlName="convicted"> เคย</label>
+        <label><input type="radio" value="no" formControlName="convicted"> ไม่เคย</label>
+      </td>
+    </tr>
+
+    <!-- 8 -->
+    <tr>
+      <td colspan="4">
+        8. ปัจจุบันท่านกำลังทำงานอยู่หรือไม่<br>
+        <small>Are you currently working</small><br>
+
+        <label><input type="radio" value="yes" formControlName="currently_working"> อยู่</label>
+        <label><input type="radio" value="no" formControlName="currently_working"> ไม่อยู่</label>
+      </td>
+    </tr>
+
+    <!-- 9 -->
+    <tr>
+      <td colspan="4">
+        9. หากได้รับคัดเลือกจะสามารถเริ่มงานได้เมื่อใด<br>
+        <small>If selected, when can you start</small><br>
+
+        <label><input type="radio" value="immediate" formControlName="start_time"> ทันที</label>
+        <label><input type="radio" value="later" formControlName="start_time"> ระบุ</label>
+
+        <input class="mt" placeholder="วันที่เริ่มงาน" formControlName="start_date_detail">
+      </td>
+    </tr>
+
+    <!-- Signature -->
+    <tr>
+      <td colspan="4" style="height:100px">
+         ข้าพเจ้าขอรับรองว่า ข้อความดังกล่าวทั้งหมดในใบสมัครนี้เป็นความจริง ถูกต้อง และสมบูรณ์ทุกประการ หลังจากที่บริษัทฯ จ้างข้าพเจ้าเข้ามาทำงานแล้ว   หากปรากฏว่าข้อความในใบสมัครงาน
+         เอกสารที่นำมาแสดง หรือรายละเอียดที่ให้ไว้ไม่เป็นความจริง ข้าพเจ้ายินยอมให้ทางบริษัทฯ ใช้สิทธิ์เลิกจ้าง โดยไม่ต้องจ่ายเงินค่าชดเชยหรือค่าเสียหายใดๆ ทั้งสิ้น และไม่ต้องบอกกล่าวล่วงหน้า<br>
+        <small> I certify that all information given in this application form is true. If any part of the information is lates found to be untrue or misrepresented in any form after employment,  I hereby agree that the company 
+           has every right to terminate my employment without any compensation, severance pay whatsoever without any advance notice
+        </small>
+
+        <div class="text-end mt">
+          ลงชื่อ ____________________________
+        </div>
+      </td>
+    </tr>
+
+  </table>
+
+</section>
+
+</ng-container>
+
+  <!-- ===== FOOTER NAV ===== -->
+  <div class="d-flex justify-content-between mt-4">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="prev()"
+      [disabled]="step === 1"
+    >
+      ← กลับ
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="next()"
+      [disabled]="step === totalStep"
+    >
+      ถัดไป →
+    </button>
+  </div>
+
+</form>
