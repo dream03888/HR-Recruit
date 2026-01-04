@@ -1,6 +1,6 @@
 export const environment = {
   // API_URL: 'http://10.0.0.100:9909',
-    API_URL: 'api-recruit-production.up.railway.app',
+    API_URL: 'https://api-recruit-production.up.railway.app',
 
   // API_PATH: '/api/dms/v1',
   APP_NAME: 'SAFARI MED',
