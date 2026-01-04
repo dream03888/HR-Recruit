@@ -5,9 +5,10 @@
   "scripts": {
     "electron": "node_modules\\.bin\\electron.cmd .",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "serve -s dist/crud -l 3000",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "start:railway": "serve -s dist/crud -l $PORT",
     "test": "ng test"
   },
   "private": true,
@@ -32,6 +33,7 @@
     "ngx-socket-io": "^4.8.1",
     "rxjs": "~7.8.0",
     "serialport": "^13.0.0",
+    "serve": "^14.2.5",
     "sweetalert2": "^11.26.16",
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
@@ -43,6 +45,7 @@
     "@angular/compiler-cli": "^19.2.0",
     "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.0",
+    "cross-env": "^10.1.0",
     "electron": "^28.3.3",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
